@@ -1,0 +1,12 @@
+C:\Projects\San Andreas Patrol\San Andreas Patrol\bin\x64\Release\net5.0\San Andreas Patrol.deps.json
+C:\Projects\San Andreas Patrol\San Andreas Patrol\bin\x64\Release\net5.0\San Andreas Patrol.dll
+C:\Projects\San Andreas Patrol\San Andreas Patrol\bin\x64\Release\net5.0\ref\San Andreas Patrol.dll
+C:\Projects\San Andreas Patrol\San Andreas Patrol\bin\x64\Release\net5.0\San Andreas Patrol.pdb
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.csprojAssemblyReference.cache
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.GeneratedMSBuildEditorConfig.editorconfig
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.AssemblyInfoInputs.cache
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.AssemblyInfo.cs
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.csproj.CoreCompileInputs.cache
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.dll
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\ref\San Andreas Patrol.dll
+C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net5.0\San Andreas Patrol.pdb

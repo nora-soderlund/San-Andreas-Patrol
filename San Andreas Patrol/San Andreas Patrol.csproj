@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>San_Andreas_Patrol</RootNamespace>
+    <Platforms>AnyCPU;x64</Platforms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RAGENativeUI" Version="1.8.0-rc7" />
+    <PackageReference Include="RagePluginHook" Version="1.86.1" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,41 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v5.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v5.0": {
+      "San Andreas Patrol/1.0.0": {
+        "dependencies": {
+          "RagePluginHook": "1.86.1"
+        },
+        "runtime": {
+          "San Andreas Patrol.dll": {}
+        }
+      },
+      "RagePluginHook/1.86.1": {
+        "runtime": {
+          "lib/net472/RagePluginHook.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "1.86.1288.16169"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "San Andreas Patrol/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "RagePluginHook/1.86.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-j7OQo4VylVxckgd8+CxDHx4CHfvwJfZTyUnRqpb9bcU59I0yQRANClSW97hFbO91CcS93RXjAsq26JzrUteYHw==",
+      "path": "ragepluginhook/1.86.1",
+      "hashPath": "ragepluginhook.1.86.1.nupkg.sha512"
+    }
+  }
+}

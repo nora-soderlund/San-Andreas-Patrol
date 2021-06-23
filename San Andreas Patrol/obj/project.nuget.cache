@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "F9wi3Ktvso19mIzPJ1hX5RffTMjvaRgl0UVuWfBDnQIKV7EJPI29/JBLadJpQKNkD+sE+ylAZX2r1JuFL4GW+A==",
+  "success": true,
+  "projectFilePath": "C:\\Projects\\San Andreas Patrol\\San Andreas Patrol\\San Andreas Patrol.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\caket\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\caket\\.nuget\\packages\\ragenativeui\\1.8.0-rc7\\ragenativeui.1.8.0-rc7.nupkg.sha512",
+    "C:\\Users\\caket\\.nuget\\packages\\ragepluginhook\\1.86.1\\ragepluginhook.1.86.1.nupkg.sha512"
+  ],
+  "logs": []
+}
