@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Agencies>
+  <Agency id="lspd">
+    <Name>Los Santos Police Department</Name>
+    <Description>With 12,000 employees, the Los Santos Police Department is the third-largest municipal police department.</Description>
+
+    <Motto>To Protect and to Serve</Motto>
+    <Abbreviation>LSPD</Abbreviation>
+
+	<Formed>December 13, 1869</Formed>
+
+	<Employees>
+		<Sworn>9974</Sworn>
+		<Unsworn>2026</Unsworn>
+	</Employees>
+
+	<Ranks>
+		<Rank>Police Officer I</Rank>
+		<Rank>Police Officer II</Rank>
+		<Rank>Police Officer III</Rank>
+		<Rank>Police Officer III+1</Rank>
+		
+		<Rank>Police Detective I</Rank>
+		<Rank>Police Detective II</Rank>
+		<Rank>Police Detective III</Rank>
+		
+		<Rank>Police Sergeant I</Rank>
+		<Rank>Police Sergeant II</Rank>
+
+		<Rank>Police Lieutenant I</Rank>
+		<Rank>Police Lieutenant II</Rank>
+
+		<Rank>Police Captain I</Rank>
+		<Rank>Police Captain II</Rank>
+		<Rank>Police Captain III</Rank>
+
+		<Rank>Police Commander</Rank>
+		
+		<Rank>Police Deputy Chief</Rank>
+		<Rank>Assistant Chief of Police</Rank>
+		<Rank>Chief of Police</Rank>
+	</Ranks>
+
+	<Images>
+		<Image id="logo">agencies/lspd/seal.png</Image>
+		<Image id="card">agencies/lspd/card.png</Image>
+	</Images>
+  </Agency>
+  
+  <Agency id="lssd">
+    <Name>Los Santos County Sheriff's Department</Name>
+	<Description>With approximately 18,000 employees, the Los Santos County Sheriff's Department is the largest sherff's department.</Description>
+	
+    <Motto>A Tradition of Service</Motto>
+    <Abbreviation>LSSD</Abbreviation>
+
+	<Formed>1850</Formed>
+
+	<Employees>
+		<Sworn>10915</Sworn>
+		<Unsworn>9244</Unsworn>
+	</Employees>
+
+	<Ranks>
+		<Rank>Deputy Sheriff Trainee</Rank>
+		<Rank>Deputy Sheriff</Rank>
+		<Rank>Deputy Sheriff (BONUS I)</Rank>
+		<Rank>Deputy Sheriff (BONUS II)</Rank>
+		
+		<Rank>Sergeant</Rank>
+		<Rank>Lieutenant</Rank>
+		<Rank>Captain</Rank>
+		<Rank>Commander (Area Chief)</Rank>
+		<Rank>Chief (Division Chief)</Rank>
+
+		<Rank>Assistant Sheriff</Rank>
+		<Rank>Undersheriff</Rank>
+		<Rank>Sheriff</Rank>
+	</Ranks>
+
+	<Images>
+		<Image id="logo">agencies/lspd/badge.png</Image>
+		<Image id="card">agencies/lssd/card.png</Image>
+	</Images>
+  </Agency>
+
+  <Agency id="rhpd">
+    <Name>Rockford Hills Police Department</Name>
+    <Description>Formed in 1927, the Rockford Hills Police Department serves the City of Rockford Hills.</Description>
+
+    <Motto>To Protect and to Serve</Motto>
+    <Abbreviation>RHPD</Abbreviation>
+
+	<Formed>1927</Formed>
+
+	<Employees/>
+
+	<Ranks>
+		<Rank>Probationary Police Officer</Rank>
+		<Rank>Police Officer</Rank>
+		<Rank>Police Officer (BONUS I)</Rank>
+		<Rank>Police Officer (BONUS II)</Rank>
+		
+		<Rank>Police Detective</Rank>
+		
+		<Rank>Police Sergeant</Rank>
+		<Rank>Police Lieutenant</Rank>
+		<Rank>Police Captain</Rank>
+		<Rank>Police Commander</Rank>
+		
+		<Rank>Assistant Chief of Police</Rank>
+		<Rank>Chief of Police</Rank>
+
+		<Rank>Storm Trooper</Rank>
+	</Ranks>
+
+	<Images>
+		<Image id="logo">agencies/rhpd/seal.png</Image>
+		<Image id="card">agencies/rhpd/card.png</Image>
+	</Images>
+  </Agency>
+
+  <Agency id="dlpd" disabled="true">
+    <Name>Del Perro Police Department</Name>
+    <Description/>
+
+    <Motto/>
+    <Abbreviation>DLPD</Abbreviation>
+
+	<Formed>1897</Formed>
+
+	<Employees/>
+
+	<Ranks/>
+
+	<Images>
+		<Image id="card">stations/perro/card.png</Image>
+	</Images>
+  </Agency>
+</Agencies>

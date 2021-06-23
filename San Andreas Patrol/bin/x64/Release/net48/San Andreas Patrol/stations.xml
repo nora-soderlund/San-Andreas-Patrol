@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<Stations>
+    <Station id="mission" agency="lspd">
+        <Name>Mission Row Police Station</Name>
+        <Description>In the center of Los Santos, the Mission Row Police Station operates 18 divisions by the Los Santos Police Department.</Description>
+
+        <Type>Station</Type>
+
+        <Camera>
+            <Position breadth="505.9341" height="-1015.042" depth="33.37136"/>
+            <Rotation breadth="1.599761" height="-5.338166E-08" depth="52.32453"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/mission/card.png</Image>
+        </Images>
+    </Station>
+
+    <Station id="vinewood" agency="lspd">
+        <Name>Vinewood Police Station</Name>
+        <Description>In Downtown Vinewood, the Vinewood Police Station serves for the greater good.</Description>
+
+        <Type>Station</Type>
+
+        <Camera>
+            <Position breadth="670.195" height="-2.721929" depth="91.74464"/>
+            <Rotation breadth="0.1994823" height="-6.670146E-09" depth="114.9867"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/vinewood/card.png</Image>
+        </Images>
+    </Station>
+
+    <Station id="vespucci" agency="lspd">
+        <Name>Vespucci Police Station</Name>
+        <Description>In West Los Santos, the Vespucci Police Station serves the district of Vespucci.</Description>
+
+        <Type>Station</Type>
+
+        <Camera>
+            <Position breadth="-1142.985" height="-840.4523" depth="26.14474"/>
+            <Rotation breadth="-1.600581" height="0" depth="-108.4125"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/vespucci/card.png</Image>
+        </Images>
+    </Station>
+
+    <Station id="vespucci_beach" agency="lspd">
+        <Name>Vespucci Beach Police Station</Name>
+        <Description/>
+
+        <Type>Station</Type>
+
+        <Camera>
+            <Position breadth="-1336.559" height="-1509.573" depth="7.273115"/>
+            <Rotation breadth="-1.669422" height="-5.338351E-08" depth="-114.2879"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/vespucci_beach/card.png</Image>
+        </Images>
+    </Station>
+
+    <Station id="mesa" agency="lspd">
+        <Name>La Mesa Police Station</Name>
+        <Description>In La Mesa, the Los Santos Police Department serves its citizens through the La Mesa Police Station..</Description>
+
+        <Type>Station</Type>
+
+        <Camera>
+            <Position breadth="807.8315" height="-1279.016" depth="30.64766"/>
+            <Rotation breadth="0.1624264" height="0" depth="-117.9136"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/mesa/card.png</Image>
+        </Images>
+    </Station>
+    
+    <Station id="sandy" agency="lssd">
+        <Name>Sandy Shores Sheriff's Station</Name>
+        <Description>In the same building as a medical center, the Los Santos County Sheriff's Department serves the area of Sandy Shores.</Description>
+
+        <Type>Station</Type>
+
+        <Camera>
+            <Position breadth="1856.464" height="3667.018" depth="35.20938"/>
+            <Rotation breadth="1.038445" height="6.671202E-09" depth="-4.920321"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/sandy/card.png</Image>
+        </Images>
+    </Station>
+    
+    <Station id="paleto" agency="lssd">
+        <Name>Paleto Bay Sheriff's Office</Name>
+        <Description>The Los Santos County Sheriff's Department works to serve Paleto Bay out of the Paleto Bay Sheriff's Office.</Description>
+
+        <Type>Contract Station</Type>
+
+        <Camera>
+            <Position breadth="-435.7332" height="6033.367" depth="35.88155"/>
+            <Rotation breadth="0.8984398" height="-1.334185E-08" depth="168.9199"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/paleto/card.png</Image>
+        </Images>
+    </Station>
+    
+    <Station id="davis" agency="lssd">
+        <Name>Davis Sheriff's Station</Name>
+        <Description>Established in 1889, the Los Santos County Sheriff's Department is contracted to serve the Davis area.</Description>
+
+        <Type>Contract Station</Type>
+
+        <Camera>
+            <Position breadth="351.7282" height="-1586.919" depth="31.91398"/>
+            <Rotation breadth="-1.509798" height="0" depth="-77.20448"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/davis/card.png</Image>
+        </Images>
+    </Station>
+
+    <Station id="rockford" agency="rhpd">
+        <Name>Rockford Hills Police Headquarters</Name>
+        <Description>Formed in 1927, the Rockford Hills Police Department serves the City of Rockford Hills.</Description>
+
+        <Type>Headquarters</Type>
+
+        <Camera>
+            <Position breadth="-546.075" height="-152.6648" depth="41.42685"/>
+            <Rotation breadth="3.799423" height="1.069568E-07" depth="66.27861"/>
+        </Camera>
+
+        <Images>
+            <Image id="card">stations/rockford/card.png</Image>
+        </Images>
+    </Station>
+</Stations>
