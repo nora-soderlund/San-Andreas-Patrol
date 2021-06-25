@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="RAGENativeUI" Version="1.8.0-rc7" />
     <PackageReference Include="RagePluginHook" Version="1.86.1" />
   </ItemGroup>

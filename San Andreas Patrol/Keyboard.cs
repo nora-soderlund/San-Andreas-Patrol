@@ -8,12 +8,12 @@ using Rage;
 using Rage.Attributes;
 
 namespace SanAndreasPatrol {
-    class Keyboard : IEntryPoint {
+    class Keyboard {
         public static Dictionary<Keys, List<Action>> Keys = new Dictionary<Keys, List<Action>>();
 
         public static List<Keys> KeysDown = new List<Keys>();
 
-        public void OnFiberStart() {
+        public static void Start() {
             while(true) {
                 GameFiber.Yield();
 

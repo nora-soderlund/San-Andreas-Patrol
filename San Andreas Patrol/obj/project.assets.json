@@ -160,11 +160,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Projects\\San Andreas Patrol\\San Andreas Patrol\\San Andreas Patrol.csproj",
+      "projectUniqueName": "C:\\Projects\\San-Andreas-Patrol\\San Andreas Patrol\\San Andreas Patrol.csproj",
       "projectName": "San Andreas Patrol",
-      "projectPath": "C:\\Projects\\San Andreas Patrol\\San Andreas Patrol\\San Andreas Patrol.csproj",
+      "projectPath": "C:\\Projects\\San-Andreas-Patrol\\San Andreas Patrol\\San Andreas Patrol.csproj",
       "packagesPath": "C:\\Users\\caket\\.nuget\\packages\\",
-      "outputPath": "C:\\Projects\\San Andreas Patrol\\San Andreas Patrol\\obj\\",
+      "outputPath": "C:\\Projects\\San-Andreas-Patrol\\San Andreas Patrol\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\"

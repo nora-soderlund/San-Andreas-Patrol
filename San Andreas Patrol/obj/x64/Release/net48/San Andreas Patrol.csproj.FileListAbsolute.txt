@@ -9,3 +9,14 @@ C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andr
 C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.dll
 C:\Projects\San Andreas Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.pdb
 C:\Projects\San Andreas Patrol\San Andreas Patrol\bin\x64\Release\net48\RAGENativeUI.dll
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\bin\x64\Release\net48\San Andreas Patrol.dll
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\bin\x64\Release\net48\San Andreas Patrol.pdb
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\bin\x64\Release\net48\RAGENativeUI.dll
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\bin\x64\Release\net48\RagePluginHook.dll
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.csproj.AssemblyReference.cache
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.AssemblyInfoInputs.cache
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.AssemblyInfo.cs
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.csproj.CoreCompileInputs.cache
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.csproj.CopyComplete
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.dll
+C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.pdb

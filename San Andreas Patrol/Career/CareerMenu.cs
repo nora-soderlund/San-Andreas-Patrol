@@ -11,13 +11,16 @@ using RAGENativeUI;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 
+using SanAndreasPatrol.Agencies;
+using SanAndreasPatrol.Stations;
+
 namespace SanAndreasPatrol.Career {
     class CareerMenu {
         public static TabView Tab;
 
         private static TabMissionSelectItem AgenciesTab;
 
-        public static void Initialize() {
+        public static void Start() {
             Tab = new TabView("San Andreas Patrol");
 
             Tab.Name = " "; // name
@@ -29,7 +32,7 @@ namespace SanAndreasPatrol.Career {
 
             TabTextItem newCareer = new TabTextItem("Start a New Career", "New Career", $"Press enter to start a new San Andreas Patrol career.");
 
-            newCareer.Activated += (s, e) => new CareerCreation();
+            newCareer.Activated += (s, e) => GameFiber.StartNew(CareerCreation.Start);
             
             items.Add(newCareer);
 
@@ -38,51 +41,42 @@ namespace SanAndreasPatrol.Career {
 
 
             List<MissionInformation> agencies = new List<MissionInformation>();
-            
-            foreach(XElement element in CareerEntryPoint.Agencies.Element("Agencies").Elements("Agency")) {
-                Game.Console.Print(element.Attribute("id").Value);
 
-                if (element.Attribute("disabled") != null)
-                    continue;
+            foreach(Agency agency in AgencyManager.Agencies.Where(x => x.Disabled != true)) {
+                List<Tuple<string, string>> information = new List<Tuple<string, string>>();
 
-                string name = element.Element("Name").Value;
-                string description = element.Element("Description").Value ?? "";
+                if (agency.Motto.Length != 0 && agency.Formed.Length != 0) {
+                    information.Add(new Tuple<string, string>("Motto", agency.Motto));
+                    information.Add(new Tuple<string, string>("Formed", agency.Formed));
 
-                List<Tuple<string, string>> lines = new List<Tuple<string, string>>();
-
-                if(element.Element("Motto").Value != null && element.Element("Formed").Value != null) {
-                    lines.Add(new Tuple<string, string>("Motto", element.Element("Motto").Value));
-                    lines.Add(new Tuple<string, string>("Formed", element.Element("Formed").Value));
-
-                    lines.Add(new Tuple<string, string>("", ""));
+                    information.Add(new Tuple<string, string>("", ""));
                 }
 
-                if(!element.Element("Employees").IsEmpty) {
-                    lines.Add(new Tuple<string, string>("Sworn Employees", int.Parse(element.Element("Employees").Element("Sworn").Value).ToString("N0")));
-                    lines.Add(new Tuple<string, string>("Unsworn Employees", int.Parse(element.Element("Employees").Element("Unsworn").Value).ToString("N0")));
+                if (agency.SwornEmployees != 0)
+                    information.Add(new Tuple<string, string>("Sworn Employees", agency.SwornEmployees.ToString("N0")));
 
-                    lines.Add(new Tuple<string, string>("", ""));
-                }
+                if (agency.UnswornEmployees != 0)
+                    information.Add(new Tuple<string, string>("Unsworn Employees", agency.UnswornEmployees.ToString("N0")));
 
-                if(element.Attribute("disabled") == null)
-                    lines.Add(new Tuple<string, string>("Stations", CareerEntryPoint.Stations.Element("Stations").Elements("Station").Count(x => x.Attribute("agency").Value == element.Attribute("id").Value).ToString("N0")));
+                if (agency.SwornEmployees != 0 || agency.UnswornEmployees != 0)
+                    information.Add(new Tuple<string, string>("", ""));
 
-                agencies.Add(new MissionInformation(name, description, lines.ToArray()) {
-                    Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + element.Element("Images").Elements("Image").Where(x => x.Attribute("id").Value == "card").FirstOrDefault().Value))
+                information.Add(new Tuple<string, string>("Stations", StationManager.Stations.Count(x => x.Agency == agency.Id).ToString("N0")));
+
+                agencies.Add(new MissionInformation(agency.Name, agency.Description, information) {
+                    Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + agency.Images["card"]))
                 });
 
-                foreach(XElement station in CareerEntryPoint.Stations.Element("Stations").Elements("Station").Where(x => x.Attribute("agency").Value == element.Attribute("id").Value)) {
-                    Game.Console.Print(station.Attribute("id").Value);
-                    
+                foreach (Station station in StationManager.Stations.Where(x => x.Agency == agency.Id)) {
                     agencies.Add(new MissionInformation(
-                        "\t" + station.Element("Name").Value,
-                        station.Element("Description").Value ?? "",
+                        "\t" + station.Name,
+                        station.Description,
 
                         new Tuple<string, string>[] {
-                            new Tuple<string, string>("Type", station.Element("Type").Value)
+                            new Tuple<string, string>("Type", station.Type)
                         }
                     ) {
-                        Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + station.Element("Images").Elements("Image").Where(x => x.Attribute("id").Value == "card").FirstOrDefault().Value))
+                        Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + station.Images["card"]))
                     });
                 }
             }
