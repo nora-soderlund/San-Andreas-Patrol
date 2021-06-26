@@ -9,54 +9,22 @@ using Rage;
 using Rage.Native;
 using Rage.Attributes;
 
-namespace SanAndreasPatrol.Data {
-    enum ClothingGender {
-        Unisex = 0,
-        Male = 1,
-        Female = 2
+using SanAndreasPatrol.Career;
+
+namespace SanAndreasPatrol {
+    enum Gender {
+        Unisex = 0, Male, Female
     }
 
     class Data {
-        public static Dictionary<string, ClothingGender> Genders = new Dictionary<string, ClothingGender>() {
-            { "unisex", ClothingGender.Unisex },
-            { "male", ClothingGender.Male },
-            { "female", ClothingGender.Female }
+        public static Dictionary<string, Gender> Genders = new Dictionary<string, Gender>() {
+            { "unisex", Gender.Unisex },
+            { "male", Gender.Male },
+            { "female", Gender.Female }
         };
 
-        public static List<ClothingData> Clothing = new List<ClothingData>();
-
-        public static void Start() {
-            XElement xClothing = XDocument.Load("plugins/San Andreas Patrol/data/clothing.xml").Element("Clothing");
-
-            foreach(XElement xComponent in xClothing.Elements("Component")) {
-                ClothingData clothingData = new ClothingData() {
-                    Id = xComponent.Attribute("id").Value,
-                    Gender = Genders[xComponent.Attribute("gender").Value]
-                };
-
-                foreach(XElement xPart in xComponent.Elements("Part")) {
-                    ClothingPartData clothingPartData = new ClothingPartData() {
-                        Drawable = int.Parse(xPart.Attribute("drawable").Value) - 1,
-                        Name = xPart.Attribute("name").Value
-                    };
-
-                    clothingData.Parts.Add(clothingPartData);
-                }
-
-                Clothing.Add(clothingData);
-            }
+        public static Gender GetGenderByName(string name) {
+            return Genders[name.ToLower()];
         }
-    }
-
-    class ClothingData {
-        public string Id;
-        public ClothingGender Gender;
-
-        public List<ClothingPartData> Parts = new List<ClothingPartData>();
-    }
-
-    class ClothingPartData {
-        public int Drawable;
-        public string Name;
     }
 }

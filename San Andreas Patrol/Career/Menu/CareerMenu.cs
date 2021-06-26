@@ -12,9 +12,10 @@ using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 
 using SanAndreasPatrol.Agencies;
-using SanAndreasPatrol.Stations;
+using SanAndreasPatrol.Agencies.Stations;
+using SanAndreasPatrol.Career.Creation;
 
-namespace SanAndreasPatrol.Career {
+namespace SanAndreasPatrol.Career.Menu {
     class CareerMenu {
         public static TabView Tab;
 
@@ -61,13 +62,13 @@ namespace SanAndreasPatrol.Career {
                 if (agency.SwornEmployees != 0 || agency.UnswornEmployees != 0)
                     information.Add(new Tuple<string, string>("", ""));
 
-                information.Add(new Tuple<string, string>("Stations", StationManager.Stations.Count(x => x.Agency == agency.Id).ToString("N0")));
+                information.Add(new Tuple<string, string>("Stations", agency.Stations.Count.ToString("N0")));
 
                 agencies.Add(new MissionInformation(agency.Name, agency.Description, information) {
                     Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + agency.Images["card"]))
                 });
 
-                foreach (Station station in StationManager.Stations.Where(x => x.Agency == agency.Id)) {
+                foreach (AgencyStation station in agency.Stations) {
                     agencies.Add(new MissionInformation(
                         "\t" + station.Name,
                         station.Description,

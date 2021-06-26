@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-using SanAndreasPatrol.Data;
-
 namespace SanAndreasPatrol.Agencies {
     enum AgencyOutfitType {
         Formal = 0
@@ -14,7 +12,7 @@ namespace SanAndreasPatrol.Agencies {
     class AgencyOutfit {
         public string Id;
         public AgencyOutfitType Type;
-        public ClothingGender Gender;
+        public Gender Gender;
 
         public List<AgencyOutfitPart> Parts = new List<AgencyOutfitPart>();
 

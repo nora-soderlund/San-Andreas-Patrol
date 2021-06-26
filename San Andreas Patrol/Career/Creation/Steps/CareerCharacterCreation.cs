@@ -14,13 +14,10 @@ using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 
 using SanAndreasPatrol.Agencies;
-using SanAndreasPatrol.Stations;
-using SanAndreasPatrol.Data;
+using SanAndreasPatrol.Agencies.Stations;
 
-namespace SanAndreasPatrol.Career.Creation {
+namespace SanAndreasPatrol.Career.Creation.Steps {
     class CareerCharacterCreation {
-        public static UIMenu Menu;
-
         public static UIMenuListScrollerItem<string> Gender;
 
         public static UIMenuNumericScrollerItem<int> Hair;
@@ -35,10 +32,6 @@ namespace SanAndreasPatrol.Career.Creation {
         };
 
         public static void Start() {
-            Menu = new UIMenu("Career", "Customize your character") {
-                Visible = true
-            };
-
             Gender = new UIMenuListScrollerItem<string>("Gender", "Changing the gender will reset your changes.", GenderModels.Keys);
             Hair = new UIMenuNumericScrollerItem<int>("Hair", "", 0, 0, 1);
             Glasses = new UIMenuNumericScrollerItem<int>("Glasses", "", 0, 0, 1);
@@ -51,21 +44,46 @@ namespace SanAndreasPatrol.Career.Creation {
             Glasses.IndexChanged += OnGlassesChanged;
             GlassesTexture.IndexChanged += OnGlassesTextureChanged;
 
+            Submit.Activated += OnMenuSubmit;
+
             OnGenderChanged(Gender, Gender.Index, Gender.Index);
 
-            Menu.AddItems(Gender, new UIMenuItem("") { Enabled = false }, Hair, Glasses, GlassesTexture, new UIMenuItem("") { Enabled = false }, Submit);
-
-            EntryPoint.MenuPool.Add(Menu);
+            CareerCreation.Menu.Visible = true;
+            CareerCreation.Menu.SubtitleText = "Cutomize your character";
+            CareerCreation.Menu.OnMenuClose += OnMenuCancel;
+            CareerCreation.Menu.AddItems(Gender, new UIMenuItem("") { Enabled = false }, Hair, new UIMenuItem("") { Enabled = false }, Glasses, GlassesTexture, new UIMenuItem("") { Enabled = false }, Submit);
 
             UpdateCamera();
         }
 
-        public static void Dispose() {
-            Game.Console.Print("CareerCreationCharacter.Dispose");
+        private static void OnMenuSubmit(UIMenu sender, UIMenuItem selectedItem) {
+            CareerCreation.Career.Character.Hair = Hair.Index;
 
-            Menu.Visible = false;
+            CareerCreation.Career.Character.Glasses = Glasses.Index;
+            CareerCreation.Career.Character.GlassesTexture = GlassesTexture.Index;
 
-            EntryPoint.MenuPool.Remove(Menu);
+            GameFiber.StartNew(() => {
+                Game.FadeScreenOut(1000, true);
+
+                CareerCreation.Dispose();
+
+                Stop();
+
+                Game.FadeScreenIn(1000);
+            });
+        }
+
+        public static void OnMenuCancel(UIMenu sender) {
+            CareerCreation.Dispose();
+
+            Stop();
+        }
+
+        public static void Stop() {
+            CareerCreation.Menu.Visible = false;
+            CareerCreation.Menu.SubtitleText = "";
+            CareerCreation.Menu.OnMenuClose -= OnMenuCancel;
+            CareerCreation.Menu.Clear();
         }
 
         private static void OnGenderChanged(UIMenuScrollerItem sender, int oldIndex, int newIndex) {
@@ -73,7 +91,7 @@ namespace SanAndreasPatrol.Career.Creation {
 
             Game.LocalPlayer.Character.ResetVariation();
 
-            AgencyOutfit agencyOutfit = CareerCreation.Agency.Outfits.Find(x => x.Type == AgencyOutfitType.Formal && x.Gender == ((Gender.SelectedItem == "Male")?(ClothingGender.Male):(ClothingGender.Female)));
+            AgencyOutfit agencyOutfit = CareerCreation.Career.Agency.Outfits.Find(x => x.Type == AgencyOutfitType.Formal && x.Gender == Data.Genders[Gender.SelectedItem.ToLower()]);
 
             foreach(AgencyOutfitPart agencyOutfitPart in agencyOutfit.Parts)
                 Game.LocalPlayer.Character.SetVariation(EntryPoint.ComponentIndex[agencyOutfitPart.Id], agencyOutfitPart.Drawable, agencyOutfitPart.Texture);

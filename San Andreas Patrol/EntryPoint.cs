@@ -16,9 +16,7 @@ using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 
 using SanAndreasPatrol.Agencies;
-using SanAndreasPatrol.Stations;
 using SanAndreasPatrol.Career;
-using SanAndreasPatrol.Data;
 
 [assembly: Rage.Attributes.Plugin("San Andreas Patrol", Description = "An immersive and realistic law enforcement roleplay plugin.", Author = "Chloe Ohlsson")]
 
@@ -44,12 +42,10 @@ namespace SanAndreasPatrol {
         };
 
         private static void Main() {
-            GameFiber.StartNew(Keyboard.Start);
-            GameFiber.StartNew(Data.Data.Start);
+            GameFiber.StartNew(KeyboardData.Main);
 
-            GameFiber.StartNew(AgencyManager.Start);
-            GameFiber.StartNew(StationManager.Start);
-            GameFiber.StartNew(CareerManager.Start);
+            GameFiber.StartNew(AgencyManager.Main);
+            GameFiber.StartNew(CareerManager.Main);
 
             while (true) {
                 GameFiber.Yield();

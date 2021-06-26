@@ -8,10 +8,9 @@ using System.Collections.Generic;
 using Rage;
 using Rage.Attributes;
 
-namespace SanAndreasPatrol.Stations {
-    class Station {
+namespace SanAndreasPatrol.Agencies.Stations {
+    class AgencyStation {
         public string Id;
-        public string Agency;
 
         public bool Default;
         public bool Disabled;

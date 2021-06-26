@@ -14,56 +14,49 @@ using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 
 using SanAndreasPatrol.Agencies;
-using SanAndreasPatrol.Stations;
+using SanAndreasPatrol.Agencies.Stations;
 
-namespace SanAndreasPatrol.Career.Creation {
+namespace SanAndreasPatrol.Career.Creation.Steps {
     class CareerAgencyCreation {
-        public static UIMenu Menu;
-
         public static UIMenuListScrollerItem<string> Agencies;
         public static UIMenuListScrollerItem<string> Stations;
         public static UIMenuListScrollerItem<string> Difficulties;
         public static UIMenuItem Submit;
 
         public static Agency Agency;
-        public static Station Station;
+        public static AgencyStation Station;
 
         public static void Start() {
-            Menu = new UIMenu("Career", "Create a new career") {
-                Visible = true
-            };
-
-            Menu.OnMenuClose += OnMenuClose;
-
             Agency = AgencyManager.GetDefaultAgency();
-            Station = StationManager.GetDefaultStation(Agency.Id);
+            Station = Agency.GetDefaultStation();
 
             Agencies = new UIMenuListScrollerItem<string>("Agency", "", AgencyManager.GetAgencyAbbreviations());
-            Stations = new UIMenuListScrollerItem<string>("Station", "", StationManager.GetStationNamesByAgency(Agency.Id));
+            Stations = new UIMenuListScrollerItem<string>("Station", "", Agency.GetStationNames());
             Difficulties = new UIMenuListScrollerItem<string>("Difficulty", "", new string[] { "Normal", "Realistic" });
             Submit = new UIMenuItem("Continue", "Continue to the character creation.");
 
             Agencies.IndexChanged += OnAgencyChanged;
             Stations.IndexChanged += OnStationChanged;
             Difficulties.IndexChanged += OnDifficultyChanged;
-            Submit.Activated += OnMenuFinish;
+
+            Submit.Activated += OnMenuSubmit;
 
             Agencies.Index = Agencies.Items.IndexOf(Agency.Abbreviation);
             Stations.Index = Stations.Items.IndexOf(Station.Name);
 
-            Menu.AddItems(Agencies, Stations, new UIMenuItem("") { Enabled = false }, Difficulties, new UIMenuItem("") { Enabled = false }, Submit);
-
-            EntryPoint.MenuPool.Add(Menu);
+            CareerCreation.Menu.Visible = true;
+            CareerCreation.Menu.SubtitleText = "Create a new career";
+            CareerCreation.Menu.OnMenuClose += OnMenuCancel;
+            CareerCreation.Menu.AddItems(Agencies, Stations, new UIMenuItem("") { Enabled = false }, Difficulties, new UIMenuItem("") { Enabled = false }, Submit);
 
             UpdateCamera();
         }
 
-        public static void Dispose() {
-            Game.Console.Print("CareerCreationAgency.Dispose");
-
-            Menu.Visible = false;
-
-            EntryPoint.MenuPool.Remove(Menu);
+        public static void Stop() {
+            CareerCreation.Menu.Visible = false;
+            CareerCreation.Menu.SubtitleText = "";
+            CareerCreation.Menu.OnMenuClose -= OnMenuCancel;
+            CareerCreation.Menu.Clear();
         }
 
         public static void UpdateCamera() {
@@ -73,18 +66,18 @@ namespace SanAndreasPatrol.Career.Creation {
 
         public static void OnAgencyChanged(UIMenuScrollerItem sender, int oldIndex, int newIndex) {
             Agency = AgencyManager.GetAgencyByAbbreviation(Agencies.Items[newIndex]);
-            Station = StationManager.GetDefaultStation(Agency.Id);
+            Station = Agency.GetDefaultStation();
 
             Stations.Items.Clear();
 
-            Stations.Items = StationManager.GetStationNamesByAgency(Agency.Id);
+            Stations.Items = Agency.GetStationNames();
             Stations.Index = Stations.Items.IndexOf(Station.Name);
 
             UpdateCamera();
         }
 
         public static void OnStationChanged(UIMenuScrollerItem sender, int oldIndex, int newIndex) {
-            Station = StationManager.GetStationByName(Stations.Items[newIndex]);
+            Station = Agency.GetStationByName(Stations.Items[newIndex]);
 
             UpdateCamera();
         }
@@ -96,28 +89,26 @@ namespace SanAndreasPatrol.Career.Creation {
                 Difficulties.Description = "";
         }
 
-        public static void OnMenuFinish(UIMenu sender, UIMenuItem selectedItem) {
-            Game.Console.Print("OnMenuFinish");
+        public static void OnMenuSubmit(UIMenu sender, UIMenuItem selectedItem) {
+            CareerCreation.Career.Agency = Agency;
+            CareerCreation.Career.Station = Station;
+            CareerCreation.Career.Difficulty = (Difficulties.SelectedItem == "Normal")?(CareerDifficulty.Normal):(CareerDifficulty.Realistic);
 
-            CareerCreation.Agency = Agency;
-            CareerCreation.Station = Station;
-            CareerCreation.Difficulty = Difficulties.SelectedItem;
+            GameFiber.StartNew(() => {
+                Game.FadeScreenOut(1000, true);
 
-            Game.FadeScreenOut(1000, true);
+                Stop();
 
-            Dispose();
+                CareerCharacterCreation.Start();
 
-            CareerCharacterCreation.Start();
-
-            Game.FadeScreenIn(1000);
+                Game.FadeScreenIn(1000);
+            });
         }
 
-        public static void OnMenuClose(UIMenu sender) {
-            Game.Console.Print("OnMenuClose");
-
+        public static void OnMenuCancel(UIMenu sender) {
             CareerCreation.Dispose();
 
-            Dispose();
+            Stop();
         }
     }
 }

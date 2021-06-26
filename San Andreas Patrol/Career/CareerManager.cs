@@ -12,6 +12,9 @@ using RAGENativeUI;
 using RAGENativeUI.Elements;
 using RAGENativeUI.PauseMenu;
 
+using SanAndreasPatrol.Career.Creation;
+using SanAndreasPatrol.Career.Menu;
+
 namespace SanAndreasPatrol.Career {
     class CareerManager {
         public static readonly Keys Key = Keys.F7;
@@ -20,7 +23,7 @@ namespace SanAndreasPatrol.Career {
 
         public static Dictionary<string, List<string>> Names = new Dictionary<string, List<string>>();
 
-        public static void Start() {
+        public static void Main() {
             XDocument xDocument;
 
             if(!File.Exists("plugins/San Andreas Patrol/careers.xml")) {
@@ -41,10 +44,6 @@ namespace SanAndreasPatrol.Career {
             }
 
             foreach(XElement xCareer in xDocument.Elements("Career")) {
-                Career career = new Career() {
-                    Name = xCareer.Element("Name").Value
-                };
-
                 Careers.Add(new Career(xCareer));
             }
 
@@ -60,19 +59,28 @@ namespace SanAndreasPatrol.Career {
                 Names.Add(xNames.Attribute("id").Value, names);
             }
 
+            GameFiber.StartNew(CareerCreation.Main);
             CareerMenu.Start();
         
             Game.DisplayHelp($"Press ~{Key.GetInstructionalId()}~ to start San Andreas Patrol.");
 
-            Keyboard.Register(Key, OnKeyDown);
-            Keyboard.Register(Keys.T, OnKeyDownReset);
+            KeyboardData.Register(Key, OnKeyDown);
+            KeyboardData.Register(Keys.T, OnKeyDownReset);
         }
 
         private static void OnKeyDown() {
+            Game.Console.Print("IsAnyMenuVisible: " + UIMenu.IsAnyMenuVisible.ToString());
+            Game.Console.Print("IsAnyPauseMenuVisible: " + TabView.IsAnyPauseMenuVisible.ToString());
+
             if (UIMenu.IsAnyMenuVisible || TabView.IsAnyPauseMenuVisible)
                 return;
 
+            if (CareerCreation.Active)
+                return;
+
             if (Careers.Count == 0) {
+                Game.Console.Print("Start");
+
                 GameFiber.StartNew(CareerCreation.Start);
 
                 return;

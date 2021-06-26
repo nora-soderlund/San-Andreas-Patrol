@@ -8,13 +8,13 @@ using System.Collections.Generic;
 using Rage;
 using Rage.Attributes;
 
-using SanAndreasPatrol.Data;
+using SanAndreasPatrol.Agencies.Stations;
 
 namespace SanAndreasPatrol.Agencies {
     class AgencyManager {
         public static List<Agency> Agencies = new List<Agency>();
 
-        public static void Start() {
+        public static void Main() {
             Game.Console.Print("[San Andreas Patrol] Reading agencies.xml from \"plugins/San Andreas Patrol/agencies.xml\"...");
 
             XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/agencies.xml");
@@ -22,8 +22,6 @@ namespace SanAndreasPatrol.Agencies {
             XElement xAgencies = xDocument.Element("Agencies");
 
             foreach(XElement xAgency in xAgencies.Elements("Agency")) {
-                Game.Console.Print("[San Andreas Patrol] Parsing agency id:" + xAgency.Attribute("id").Value + " " + xAgency.Element("Name").Value + "...");
-
                 Agency agency = new Agency() {
                     Id = xAgency.Attribute("id").Value,
                     Default = (xAgency.Attribute("default") != null),
@@ -54,10 +52,8 @@ namespace SanAndreasPatrol.Agencies {
                         AgencyOutfit agencyOutfit = new AgencyOutfit() {
                             Id = outfit.Attribute("id").Value,
                             Type = AgencyOutfit.Types[outfit.Attribute("type").Value],
-                            Gender = Data.Data.Genders[outfit.Attribute("gender").Value]
+                            Gender = Data.Genders[outfit.Attribute("gender").Value]
                         };
-
-                        Game.Console.Print("outfit " + agencyOutfit.Id + " gender " + agencyOutfit.Gender.ToString() + " type " + agencyOutfit.Type.ToString());
 
                         foreach (XElement part in outfit.Elements("Part")) {
                             AgencyOutfitPart agencyOutfitPart = new AgencyOutfitPart() {
@@ -66,12 +62,54 @@ namespace SanAndreasPatrol.Agencies {
                                 Texture = int.Parse(part.Attribute("texture").Value) - 1
                             };
 
-                            Game.Console.Print("id " + agencyOutfitPart.Id + " drawable " + agencyOutfitPart.Drawable + " texture " + agencyOutfitPart.Texture);
-
                             agencyOutfit.Parts.Add(agencyOutfitPart);
                         }
 
                         agency.Outfits.Add(agencyOutfit);
+                    }
+                }
+
+                if (!xAgency.Element("Stations").IsEmpty) {
+                    foreach (XElement xStation in xAgency.Element("Stations").Elements("Station")) {
+                        Game.Console.Print("[San Andreas Patrol] Parsing station id:" + xStation.Attribute("id").Value + " " + xStation.Element("Name").Value + "...");
+
+                        AgencyStation station = new AgencyStation() {
+                            Id = xStation.Attribute("id").Value,
+
+                            Default = (xStation.Attribute("default") != null),
+                            Disabled = (xStation.Attribute("disabled") != null),
+
+                            Name = xStation.Element("Name").Value,
+                            Description = (!xStation.Element("Description").IsEmpty) ? (xStation.Element("Description").Value) : (""),
+
+                            Type = (!xStation.Element("Type").IsEmpty) ? (xStation.Element("Type").Value) : ("")
+                        };
+
+                        if (!xStation.Element("Camera").IsEmpty) {
+                            XElement xCamera = xStation.Element("Camera");
+
+                            XElement xPosition = xCamera.Element("Position");
+
+                            station.CameraPosition = new Vector3(
+                                float.Parse(xPosition.Attribute("breadth").Value),
+                                float.Parse(xPosition.Attribute("height").Value),
+                                float.Parse(xPosition.Attribute("depth").Value));
+
+                            XElement xRotation = xCamera.Element("Rotation");
+
+                            station.CameraRotation = new Rotator(
+                                float.Parse(xRotation.Attribute("breadth").Value),
+                                float.Parse(xRotation.Attribute("height").Value),
+                                float.Parse(xRotation.Attribute("depth").Value));
+                        }
+
+                        if (!xStation.Element("Images").IsEmpty) {
+                            foreach (XElement image in xStation.Element("Images").Elements("Image")) {
+                                station.Images.Add(image.Attribute("id").Value, image.Value);
+                            }
+                        }
+
+                        agency.Stations.Add(station);
                     }
                 }
 
@@ -82,9 +120,9 @@ namespace SanAndreasPatrol.Agencies {
                 }
 
                 Agencies.Add(agency);
-            }
 
-            Game.Console.Print("[San Andreas Patrol] Finished loading " + Agencies.Count + " agencies to memory!");
+                Game.Console.Print("[San Andreas Patrol] Loaded agency id:" + xAgency.Attribute("id").Value + " " + xAgency.Element("Name").Value + " with " + agency.Stations.Count + " stations...");
+            }
         }
 
         public static Agency GetDefaultAgency() {
