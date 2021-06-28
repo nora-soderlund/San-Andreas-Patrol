@@ -14,8 +14,8 @@ namespace SanAndreasPatrol.Agencies {
     class AgencyManager {
         public static List<Agency> Agencies = new List<Agency>();
 
-        public static void Main() {
-            Game.Console.Print("[San Andreas Patrol] Reading agencies.xml from \"plugins/San Andreas Patrol/agencies.xml\"...");
+        public static void Fiber() {
+            EntryPoint.Print("[San Andreas Patrol] Reading agencies.xml from \"plugins/San Andreas Patrol/agencies.xml\"...");
 
             XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/agencies.xml");
 
@@ -71,7 +71,7 @@ namespace SanAndreasPatrol.Agencies {
 
                 if (!xAgency.Element("Stations").IsEmpty) {
                     foreach (XElement xStation in xAgency.Element("Stations").Elements("Station")) {
-                        Game.Console.Print("[San Andreas Patrol] Parsing station id:" + xStation.Attribute("id").Value + " " + xStation.Element("Name").Value + "...");
+                        EntryPoint.Print("[San Andreas Patrol] Parsing station id:" + xStation.Attribute("id").Value + " " + xStation.Element("Name").Value + "...");
 
                         AgencyStation station = new AgencyStation() {
                             Id = xStation.Attribute("id").Value,
@@ -85,22 +85,51 @@ namespace SanAndreasPatrol.Agencies {
                             Type = (!xStation.Element("Type").IsEmpty) ? (xStation.Element("Type").Value) : ("")
                         };
 
-                        if (!xStation.Element("Camera").IsEmpty) {
-                            XElement xCamera = xStation.Element("Camera");
+                        if (!xStation.Element("Cameras").IsEmpty) {
+                            foreach (XElement xCamera in xStation.Element("Cameras").Elements("Camera")) {
+                                XElement xPosition = xCamera.Element("Position");
+                                XElement xRotation = xCamera.Element("Rotation");
 
-                            XElement xPosition = xCamera.Element("Position");
+                                AgencyStationCamera agencyStationCamera = new AgencyStationCamera() {
+                                    Type = xCamera.Attribute("type").Value,
 
-                            station.CameraPosition = new Vector3(
-                                float.Parse(xPosition.Attribute("breadth").Value),
-                                float.Parse(xPosition.Attribute("height").Value),
-                                float.Parse(xPosition.Attribute("depth").Value));
+                                    Position = new Vector3(
+                                        float.Parse(xPosition.Attribute("breadth").Value),
+                                        float.Parse(xPosition.Attribute("height").Value),
+                                        float.Parse(xPosition.Attribute("depth").Value)),
 
-                            XElement xRotation = xCamera.Element("Rotation");
+                                    Rotation = new Rotator(
+                                        float.Parse(xRotation.Attribute("breadth").Value),
+                                        float.Parse(xRotation.Attribute("height").Value),
+                                        float.Parse(xRotation.Attribute("depth").Value))
+                                };
 
-                            station.CameraRotation = new Rotator(
-                                float.Parse(xRotation.Attribute("breadth").Value),
-                                float.Parse(xRotation.Attribute("height").Value),
-                                float.Parse(xRotation.Attribute("depth").Value));
+                                station.Cameras.Add(agencyStationCamera);
+                            }
+                        }
+
+                        if (!xStation.Element("Spawns").IsEmpty) {
+                            foreach (XElement xSpawn in xStation.Element("Spawns").Elements("Spawn")) {
+                                XElement xPosition = xSpawn.Element("Position");
+                                XElement xRotation = xSpawn.Element("Rotation");
+
+                                AgencyStationSpawn agencyStationSpawn = new AgencyStationSpawn() {
+                                    Type = xSpawn.Attribute("type").Value,
+                                    Step = (xSpawn.Attribute("step") == null) ? ("") : (xSpawn.Attribute("step").Value),
+
+                                    Position = new Vector3(
+                                        float.Parse(xPosition.Attribute("breadth").Value),
+                                        float.Parse(xPosition.Attribute("height").Value),
+                                        float.Parse(xPosition.Attribute("depth").Value)),
+
+                                    Rotation = new Rotator(
+                                        float.Parse(xRotation.Attribute("breadth").Value),
+                                        float.Parse(xRotation.Attribute("height").Value),
+                                        float.Parse(xRotation.Attribute("depth").Value))
+                                };
+
+                                station.Spawns.Add(agencyStationSpawn);
+                            }
                         }
 
                         if (!xStation.Element("Images").IsEmpty) {
@@ -121,7 +150,7 @@ namespace SanAndreasPatrol.Agencies {
 
                 Agencies.Add(agency);
 
-                Game.Console.Print("[San Andreas Patrol] Loaded agency id:" + xAgency.Attribute("id").Value + " " + xAgency.Element("Name").Value + " with " + agency.Stations.Count + " stations...");
+                EntryPoint.Print("[San Andreas Patrol] Loaded agency id:" + xAgency.Attribute("id").Value + " " + xAgency.Element("Name").Value + " with " + agency.Stations.Count + " stations...");
             }
         }
 

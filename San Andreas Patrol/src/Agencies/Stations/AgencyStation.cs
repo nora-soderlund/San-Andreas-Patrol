@@ -19,9 +19,25 @@ namespace SanAndreasPatrol.Agencies.Stations {
         public string Description;
         public string Type;
 
-        public Vector3 CameraPosition;
-        public Rotator CameraRotation;
+        public List<AgencyStationCamera> Cameras = new List<AgencyStationCamera>();
+
+        public List<AgencyStationSpawn> Spawns = new List<AgencyStationSpawn>();
 
         public Dictionary<string, string> Images = new Dictionary<string, string>();
+    }
+
+    class AgencyStationCamera {
+        public string Type;
+
+        public Vector3 Position;
+        public Rotator Rotation;
+    }
+
+    class AgencyStationSpawn {
+        public string Type;
+        public string Step;
+
+        public Vector3 Position;
+        public Rotator Rotation;
     }
 }

@@ -20,3 +20,5 @@ C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andr
 C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.csproj.CopyComplete
 C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.dll
 C:\Projects\San-Andreas-Patrol\San Andreas Patrol\obj\x64\Release\net48\San Andreas Patrol.pdb
+C:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\plugins\net48\San Andreas Patrol.dll
+C:\Program Files (x86)\Steam\steamapps\common\Grand Theft Auto V\plugins\net48\San Andreas Patrol.pdb

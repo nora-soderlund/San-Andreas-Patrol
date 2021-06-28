@@ -21,14 +21,13 @@ namespace SanAndreasPatrol.Career.Creation {
         public static bool Active;
 
         public static Vector3 OriginalPosition;
-        public static bool CareerMenuEnabled;
 
         public static Career Career;
 
         public static UIMenu Menu;
         public static Camera Camera;
 
-        public static void Main() {
+        public static void Fiber() {
             Menu = new UIMenu("Career", "");
 
             EntryPoint.MenuPool.Add(Menu);
@@ -39,15 +38,14 @@ namespace SanAndreasPatrol.Career.Creation {
 
             Career = new Career();
 
-            CareerMenuEnabled = CareerMenu.Tab.Visible;
             OriginalPosition = Game.LocalPlayer.Character.Position;
 
             Game.FadeScreenOut(1000, true);
 
             Camera = new Camera(true);
 
-            if(CareerMenu.Tab.Visible)
-                CareerMenu.Tab.Visible = false;
+            if(CareerMenu.TabView.Visible)
+                CareerMenu.TabView.Visible = false;
 
             Game.LocalPlayer.HasControl = false;
             Game.LocalPlayer.Character.IsVisible = false;
@@ -59,27 +57,31 @@ namespace SanAndreasPatrol.Career.Creation {
             Game.FadeScreenIn(1000);
         }
 
+        public static void Finish() {
+            Dispose();
+
+            Career.Save();
+
+            CareerManager.Careers.Add(Career);
+
+            if (CareerMenu.TabView.Visible)
+                CareerMenu.TabView.Visible = false;
+
+            CareerManager.Start(Career);
+        }
+
         public static void Dispose() {
-            GameFiber.StartNew(() => {
-                Game.FadeScreenOut(1000, true);
+            if (Camera.IsValid())
+                Camera.Delete();
 
-                if (Camera.IsValid())
-                    Camera.Delete();
+            Game.LocalPlayer.Character.Position = OriginalPosition;
 
-                if (CareerMenuEnabled)
-                    CareerMenu.Tab.Visible = CareerMenuEnabled;
+            Game.LocalPlayer.HasControl = true;
+            Game.LocalPlayer.Character.IsVisible = true;
 
-                Game.LocalPlayer.Character.Position = OriginalPosition;
+            EntryPoint.RadarDisabled = false;
 
-                Game.LocalPlayer.HasControl = true;
-                Game.LocalPlayer.Character.IsVisible = true;
-
-                EntryPoint.RadarDisabled = false;
-
-                Game.FadeScreenIn(1000);
-
-                Active = false;
-            });
+            Active = false;
         }
     }
 }

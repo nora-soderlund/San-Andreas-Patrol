@@ -23,15 +23,12 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
         public static UIMenuListScrollerItem<string> Difficulties;
         public static UIMenuItem Submit;
 
-        public static Agency Agency;
-        public static AgencyStation Station;
-
         public static void Start() {
-            Agency = AgencyManager.GetDefaultAgency();
-            Station = Agency.GetDefaultStation();
+            CareerCreation.Career.Agency = AgencyManager.GetDefaultAgency();
+            CareerCreation.Career.Station = CareerCreation.Career.Agency.GetDefaultStation();
 
             Agencies = new UIMenuListScrollerItem<string>("Agency", "", AgencyManager.GetAgencyAbbreviations());
-            Stations = new UIMenuListScrollerItem<string>("Station", "", Agency.GetStationNames());
+            Stations = new UIMenuListScrollerItem<string>("Station", "", CareerCreation.Career.Agency.GetStationNames());
             Difficulties = new UIMenuListScrollerItem<string>("Difficulty", "", new string[] { "Normal", "Realistic" });
             Submit = new UIMenuItem("Continue", "Continue to the character creation.");
 
@@ -41,8 +38,8 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
 
             Submit.Activated += OnMenuSubmit;
 
-            Agencies.Index = Agencies.Items.IndexOf(Agency.Abbreviation);
-            Stations.Index = Stations.Items.IndexOf(Station.Name);
+            Agencies.Index = Agencies.Items.IndexOf(CareerCreation.Career.Agency.Abbreviation);
+            Stations.Index = Stations.Items.IndexOf(CareerCreation.Career.Station.Name);
 
             CareerCreation.Menu.Visible = true;
             CareerCreation.Menu.SubtitleText = "Create a new career";
@@ -60,24 +57,26 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
         }
 
         public static void UpdateCamera() {
-            Game.LocalPlayer.Character.Position = CareerCreation.Camera.Position = new Vector3(Station.CameraPosition.X, Station.CameraPosition.Y, Station.CameraPosition.Z);
-            CareerCreation.Camera.Rotation = new Rotator(Station.CameraRotation.Pitch, Station.CameraRotation.Roll, Station.CameraRotation.Yaw);
+            AgencyStationCamera agencyStationCamera = CareerCreation.Career.Station.Cameras.FirstOrDefault(x => x.Type == "card");
+
+            Game.LocalPlayer.Character.Position = CareerCreation.Camera.Position = agencyStationCamera.Position;
+            CareerCreation.Camera.Rotation = agencyStationCamera.Rotation;
         }
 
         public static void OnAgencyChanged(UIMenuScrollerItem sender, int oldIndex, int newIndex) {
-            Agency = AgencyManager.GetAgencyByAbbreviation(Agencies.Items[newIndex]);
-            Station = Agency.GetDefaultStation();
+            CareerCreation.Career.Agency = AgencyManager.GetAgencyByAbbreviation(Agencies.Items[newIndex]);
+            CareerCreation.Career.Station = CareerCreation.Career.Agency.GetDefaultStation();
 
             Stations.Items.Clear();
 
-            Stations.Items = Agency.GetStationNames();
-            Stations.Index = Stations.Items.IndexOf(Station.Name);
+            Stations.Items = CareerCreation.Career.Agency.GetStationNames();
+            Stations.Index = Stations.Items.IndexOf(CareerCreation.Career.Station.Name);
 
             UpdateCamera();
         }
 
         public static void OnStationChanged(UIMenuScrollerItem sender, int oldIndex, int newIndex) {
-            Station = Agency.GetStationByName(Stations.Items[newIndex]);
+            CareerCreation.Career.Station = CareerCreation.Career.Agency.GetStationByName(Stations.Items[newIndex]);
 
             UpdateCamera();
         }
@@ -90,8 +89,6 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
         }
 
         public static void OnMenuSubmit(UIMenu sender, UIMenuItem selectedItem) {
-            CareerCreation.Career.Agency = Agency;
-            CareerCreation.Career.Station = Station;
             CareerCreation.Career.Difficulty = (Difficulties.SelectedItem == "Normal")?(CareerDifficulty.Normal):(CareerDifficulty.Realistic);
 
             GameFiber.StartNew(() => {

@@ -17,31 +17,63 @@ using SanAndreasPatrol.Career.Creation;
 
 namespace SanAndreasPatrol.Career.Menu {
     class CareerMenu {
-        public static TabView Tab;
+        public static TabView TabView;
 
-        private static TabMissionSelectItem AgenciesTab;
+        private static TabSubmenuItem tabCareers;
+        private static TabMissionSelectItem tabAgencies;
+
+        public static void Fiber() {
+            TabView = new TabView("San Andreas Patrol") {
+                Name = " ",
+
+                Money = " ",
+                MoneySubtitle = " "
+            };
+
+            tabCareers = new TabSubmenuItem("Career", new List<TabItem>());
+            tabAgencies = new TabMissionSelectItem("Agencies", new List<MissionInformation>());
+
+            TabView.AddTab(tabCareers);
+            TabView.AddTab(tabAgencies);
+
+            Game.RawFrameRender += (s, e) => TabView.DrawTextures(e.Graphics);
+
+            while (true) {
+                GameFiber.Yield();
+
+                TabView.Update();
+            }
+        }
 
         public static void Start() {
-            Tab = new TabView("San Andreas Patrol");
+            if (TabView.Visible == true)
+                return;
 
-            Tab.Name = " "; // name
-            Tab.Money = " ";
-            Tab.MoneySubtitle = " "; // agency
+            tabCareers.Items.Clear();
 
+            foreach(Career career in CareerManager.Careers) {
+                TabTextItem tabCareerItem = new TabTextItem(career.Id, "Unnamed Career", "Press enter to load this career.");
 
-            List<TabItem> items = new List<TabItem>();
+                tabCareerItem.Activated += (s, e) => {
+                    TabView.Visible = false;
 
-            TabTextItem newCareer = new TabTextItem("Start a New Career", "New Career", $"Press enter to start a new San Andreas Patrol career.");
+                    CareerManager.Start(career);
+                };
 
+                tabCareers.Items.Add(tabCareerItem);
+            }
+
+            tabCareers.Items.Add(new TabTextItem(" ", " ") {
+                CanBeFocused = false
+            });
+
+            TabTextItem newCareer = new TabTextItem("Start a New Career", "New Career", "Press enter to start a new San Andreas Patrol career.");
             newCareer.Activated += (s, e) => GameFiber.StartNew(CareerCreation.Start);
-            
-            items.Add(newCareer);
-
-            Tab.AddTab(new TabSubmenuItem("Career", items));
+            tabCareers.Items.Add(newCareer);
 
 
 
-            List<MissionInformation> agencies = new List<MissionInformation>();
+            tabAgencies.Heists.Clear();
 
             foreach(Agency agency in AgencyManager.Agencies.Where(x => x.Disabled != true)) {
                 List<Tuple<string, string>> information = new List<Tuple<string, string>>();
@@ -64,12 +96,12 @@ namespace SanAndreasPatrol.Career.Menu {
 
                 information.Add(new Tuple<string, string>("Stations", agency.Stations.Count.ToString("N0")));
 
-                agencies.Add(new MissionInformation(agency.Name, agency.Description, information) {
+                tabAgencies.Heists.Add(new MissionInformation(agency.Name, agency.Description, information) {
                     Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + agency.Images["card"]))
                 });
 
                 foreach (AgencyStation station in agency.Stations) {
-                    agencies.Add(new MissionInformation(
+                    tabAgencies.Heists.Add(new MissionInformation(
                         "\t" + station.Name,
                         station.Description,
 
@@ -82,19 +114,23 @@ namespace SanAndreasPatrol.Career.Menu {
                 }
             }
 
-            Tab.AddTab(AgenciesTab = new TabMissionSelectItem("Agencies", agencies));
+            tabCareers.Visible = true;
 
-            GameFiber.StartNew(OnFiberStart);
+            TabView.Visible = true;
         }
 
-        private static void OnFiberStart() {
-            Game.RawFrameRender += (s, e) => Tab.DrawTextures(e.Graphics);
+        public static void Toggle() {
+            if (TabView.Visible)
+                Stop();
+            else
+                Start();
+        }
 
-            while(true) {
-                GameFiber.Yield();
+        public static void Stop() {
+            if (TabView.Visible == false)
+                return;
 
-                Tab.Update();
-            }
+            TabView.Visible = true;
         }
     }
 }

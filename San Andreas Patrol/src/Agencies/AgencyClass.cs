@@ -38,6 +38,10 @@ namespace SanAndreasPatrol.Agencies {
             return Stations.FirstOrDefault(x => x.Default) ?? Stations.FirstOrDefault();
         }
 
+        public AgencyStation GetStationById(string id) {
+            return Stations.Find(x => x.Id == id);
+        }
+
         public AgencyStation GetStationByName(string name) {
             return Stations.Find(x => x.Name == name);
         }

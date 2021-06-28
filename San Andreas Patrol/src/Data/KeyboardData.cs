@@ -13,7 +13,7 @@ namespace SanAndreasPatrol {
 
         public static List<Keys> KeysDown = new List<Keys>();
 
-        public static void Main() {
+        public static void Fiber() {
             while(true) {
                 GameFiber.Yield();
 
