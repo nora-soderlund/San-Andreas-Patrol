@@ -52,7 +52,7 @@ namespace SanAndreasPatrol.Career.Menu {
             tabCareers.Items.Clear();
 
             foreach(Career career in CareerManager.Careers) {
-                TabTextItem tabCareerItem = new TabTextItem(career.Id, "Unnamed Career", "Press enter to load this career.");
+                TabTextItem tabCareerItem = new TabTextItem(career.Firstname + " " + career.Lastname, "Unnamed Career", "Press enter to load this career.");
 
                 tabCareerItem.Activated += (s, e) => {
                     TabView.Visible = false;

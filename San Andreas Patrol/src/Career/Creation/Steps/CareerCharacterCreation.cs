@@ -21,14 +21,57 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
         public static UIMenuListScrollerItem<string> Gender;
 
         public static UIMenuItem Parents;
+        public static UIMenuItem Name;
         public static UIMenuItem Items;
 
         public static UIMenuItem Submit;
 
         public static void Start() {
+            CareerCreation.Career.Firstname = CareerManager.Names["male"][new Random().Next(CareerManager.Names["male"].Count)];
+            CareerCreation.Career.Lastname = CareerManager.Names["family"][new Random().Next(CareerManager.Names["family"].Count)];
+
             Gender = new UIMenuListScrollerItem<string>("Sex", "Changing the sex will reset your changes.", new string[] { "Male", "Female" });
+            
             Parents = new UIMenuItem("Parents", "Press enter to change your parents.") {
                 RightLabel = "Default"
+            };
+
+            Name = new UIMenuItem("Name", "Press enter to change your name.") {
+                RightLabel = CareerCreation.Career.Firstname + " " + CareerCreation.Career.Lastname
+            };
+
+            Name.Activated += (s, e) => {
+                CareerCreation.Menu.Visible = false;
+
+                Game.DisplaySubtitle("Enter your character's name...");
+
+                NativeFunction.Natives.DISPLAY_ONSCREEN_KEYBOARD(6, "FMMC_KEY_TIP", "p2", CareerCreation.Career.Firstname + " " + CareerCreation.Career.Lastname, "", "", "", 205);
+            
+                while(true) {
+                    GameFiber.Yield();
+
+                    int status = NativeFunction.CallByName<int>("UPDATE_ONSCREEN_KEYBOARD");
+
+                    if (status == 1) {
+                        string name = (string)NativeFunction.CallByName("GET_ONSCREEN_KEYBOARD_RESULT", typeof(string));
+
+                        int breaker = name.LastIndexOf(' ');
+
+                        if (breaker == -1)
+                            break;
+
+                        CareerCreation.Career.Firstname = name.Substring(0, breaker);
+                        CareerCreation.Career.Lastname = name.Substring(breaker + 1);
+
+                        break;
+                    }
+                    else if (status == 2)
+                        break;
+                }
+
+                CareerCreation.Menu.Visible = true;
+
+                Name.RightLabel = CareerCreation.Career.Firstname + " " + CareerCreation.Career.Lastname;
             };
 
             Items = new UIMenuItem("Hair, ears, and glasses..", "Press enter to change your hair and glasses.");
@@ -47,7 +90,7 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
             CareerCreation.Menu.Visible = true;
             CareerCreation.Menu.SubtitleText = "Customize your character";
             CareerCreation.Menu.OnMenuClose += OnMenuCancel;
-            CareerCreation.Menu.AddItems(Gender, Parents, new UIMenuItem("") { Enabled = false }, Items, new UIMenuItem("") { Enabled = false }, Submit);
+            CareerCreation.Menu.AddItems(Gender, Parents, Name, new UIMenuItem("") { Enabled = false }, Items, new UIMenuItem("") { Enabled = false }, Submit);
 
             UpdateCamera();
         }
@@ -304,7 +347,10 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
             AgencyOutfit agencyOutfit = CareerCreation.Career.Agency.Outfits.Find(x => x.Type == AgencyOutfitType.Formal && x.Gender == CareerCreation.Career.Character.Gender);
             agencyOutfit.Apply(Game.LocalPlayer.Character);
 
+            CareerCreation.Career.Firstname = CareerManager.Names[Gender.SelectedItem.ToLower()][new Random().Next(CareerManager.Names[Gender.SelectedItem.ToLower()].Count)];
+
             Parents.RightLabel = "Default";
+            Name.RightLabel = CareerCreation.Career.Firstname + " " + CareerCreation.Career.Lastname;
         }
 
         public static void UpdateCamera() {

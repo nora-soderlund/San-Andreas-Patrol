@@ -15,9 +15,9 @@ namespace SanAndreasPatrol.Agencies {
         public static List<Agency> Agencies = new List<Agency>();
 
         public static void Fiber() {
-            EntryPoint.Print("[San Andreas Patrol] Reading agencies.xml from \"plugins/San Andreas Patrol/agencies.xml\"...");
+            EntryPoint.Print("[San Andreas Patrol] Reading agencies.xml from \"plugins/San Andreas Patrol/data/agencies.xml\"...");
 
-            XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/agencies.xml");
+            XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/data/agencies.xml");
 
             XElement xAgencies = xDocument.Element("Agencies");
 

@@ -18,6 +18,9 @@ namespace SanAndreasPatrol.Career {
     class Career {
         public string Id;
 
+        public string Firstname;
+        public string Lastname;
+
         public Agency Agency;
         public AgencyStation Station;
 
@@ -40,6 +43,9 @@ namespace SanAndreasPatrol.Career {
             XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/careers/" + Id + ".xml");
 
             XElement xCareer = xDocument.Element("Career");
+
+            Firstname = xCareer.Element("Firstname").Value;
+            Lastname = xCareer.Element("Lastname").Value;
 
             Agency = AgencyManager.GetAgencyById(xCareer.Element("Agency").Value);
             Station = Agency.GetStationById(xCareer.Element("Station").Value);
@@ -82,6 +88,9 @@ namespace SanAndreasPatrol.Career {
 
                 new XElement("Career",
                     new XAttribute("timestamp", DateTimeOffset.Now.ToUnixTimeSeconds()),
+
+                    new XElement("Firstname", Firstname),
+                    new XElement("Lastname", Lastname),
 
                     new XElement("Agency", Agency.Id),
                     new XElement("Station", Station.Id),

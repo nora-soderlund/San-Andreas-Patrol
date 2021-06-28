@@ -42,7 +42,7 @@ namespace SanAndreasPatrol.Career {
                 Careers.Add(new Career(id));
             }
 
-            XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/names.xml");
+            XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/data/names.xml");
 
             foreach(XElement xNames in xDocument.Element("Names").Elements("Group")) {
                 List<string> names = new List<string>();
