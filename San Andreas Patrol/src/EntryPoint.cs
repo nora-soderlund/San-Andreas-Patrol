@@ -17,8 +17,11 @@ using RAGENativeUI.PauseMenu;
 
 using SanAndreasPatrol.Agencies;
 using SanAndreasPatrol.Career;
+using SanAndreasPatrol.Extras;
+using SanAndreasPatrol.Missions;
+using SanAndreasPatrol.Radio;
 
-[assembly: Rage.Attributes.Plugin("San Andreas Patrol", Description = "An immersive and realistic law enforcement roleplay plugin.", Author = "Chloe Ohlsson")]
+[assembly: Rage.Attributes.Plugin("San Andreas Patrol", Description = "An immersive and realistic law enforcement roleplay plugin.", Author = "Chloe Ohlsson", ExitPoint = "SanAndreasPatrol.ExitPoint.Exit")]
 
 namespace SanAndreasPatrol {
     public static class EntryPoint {
@@ -29,25 +32,30 @@ namespace SanAndreasPatrol {
         public static bool RadarDisabled = false;
 
         public static Dictionary<string, int> ComponentIndex = new Dictionary<string, int>() {
-            { "Hat", 0 },
-            { "Masks", 1 },
-            { "Hair", 2 },
-            { "Torso", 3 },
-            { "Legs", 4 },
-            { "Parachutes", 5 },
-            { "Shoes", 6 },
-            { "Accessories", 7 },
-            { "Undershirt", 8 },
-            { "Armor", 9 },
-            { "Decals", 10 },
-            { "Top", 11 }
+            { "hat", 0 },
+            { "mask", 1 },
+            { "hair", 2 },
+            { "upperskin", 3 },
+            { "pants", 4 },
+            { "parachute", 5 },
+            { "shoes", 6 },
+            { "accessories", 7 },
+            { "undercoat", 8 },
+            { "armor", 9 },
+            { "decals", 10 },
+            { "top", 11 }
         };
 
         private static void Main() {
+            PluginSettings.Fiber();
+
             GameFiber.StartNew(KeyboardData.Fiber);
 
             GameFiber.StartNew(AgencyManager.Fiber);
             GameFiber.StartNew(CareerManager.Fiber);
+            GameFiber.StartNew(AimView.Fiber);
+            GameFiber.StartNew(RadioManager.Fiber);
+            GameFiber.StartNew(MissionManager.Fiber);
 
             while (true) {
                 GameFiber.Yield();
@@ -101,6 +109,31 @@ namespace SanAndreasPatrol {
                 Print("GetPlayerPosition", "Vector3(" + vehicle.Position.X + ", " + vehicle.Position.Y + ", " + vehicle.Position.Z + ")");
                 Print("GetPlayerPosition", "Rotator(" + vehicle.Rotation.Pitch + ", " + vehicle.Rotation.Roll + ", " + vehicle.Rotation.Yaw + ")");
             }
+        }
+
+        [Rage.Attributes.ConsoleCommand]
+        public static void SaveVehiclePosition() {
+            if (!Game.LocalPlayer.Character.IsInAnyVehicle(false))
+                return;
+
+            Vehicle vehicle = Game.LocalPlayer.Character.CurrentVehicle;
+
+            Print();
+
+            Print("SaveVehiclePosition", "<Spawn type=\"spawn_type\">");
+            Print("SaveVehiclePosition", "    <Position breadth=\"" + vehicle.Position.X + "\" height=\"" + vehicle.Position.Y + "\" depth=\"" + vehicle.Position.Z + "\"/>");
+            Print("SaveVehiclePosition", "    <Rotation breadth=\"" + vehicle.Rotation.Pitch + "\" height=\"" + vehicle.Rotation.Roll + "\" depth=\"" + vehicle.Rotation.Yaw + "\"/>");
+            Print("SaveVehiclePosition", "</Spawn>");
+        }
+
+        [Rage.Attributes.ConsoleCommand]
+        public static void SavePlayerPosition() {
+            Print();
+
+            Print("SaveVehiclePosition", "<Spawn type=\"spawn_type\">");
+            Print("SaveVehiclePosition", "    <Position breadth=\"" + Game.LocalPlayer.Character.Position.X + "\" height=\"" + Game.LocalPlayer.Character.Position.Y + "\" depth=\"" + Game.LocalPlayer.Character.Position.Z + "\"/>");
+            Print("SaveVehiclePosition", "    <Rotation breadth=\"" + Game.LocalPlayer.Character.Rotation.Pitch + "\" height=\"" + Game.LocalPlayer.Character.Rotation.Roll + "\" depth=\"" + Game.LocalPlayer.Character.Rotation.Yaw + "\"/>");
+            Print("SaveVehiclePosition", "</Spawn>");
         }
     }
 }

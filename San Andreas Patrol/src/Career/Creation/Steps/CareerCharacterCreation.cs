@@ -40,7 +40,7 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
                 RightLabel = CareerCreation.Career.Firstname + " " + CareerCreation.Career.Lastname
             };
 
-            Name.Activated += (s, e) => {
+            Name.Activated += (s, e) => GameFiber.StartNew(() => {
                 CareerCreation.Menu.Visible = false;
 
                 Game.DisplaySubtitle("Enter your character's name...");
@@ -72,7 +72,7 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
                 CareerCreation.Menu.Visible = true;
 
                 Name.RightLabel = CareerCreation.Career.Firstname + " " + CareerCreation.Career.Lastname;
-            };
+            });
 
             Items = new UIMenuItem("Hair, ears, and glasses..", "Press enter to change your hair and glasses.");
 

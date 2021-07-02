@@ -23,10 +23,12 @@ namespace SanAndreasPatrol.Career {
 
         public Agency Agency;
         public AgencyStation Station;
+        public AgencyRank Rank;
 
         public CareerDifficulty Difficulty;
 
         public CareerCharacter Character = new CareerCharacter();
+        public List<CareerVehicle> Vehicles = new List<CareerVehicle>();
 
         public Career() {
             string id = Guid.NewGuid().ToString();
@@ -40,6 +42,8 @@ namespace SanAndreasPatrol.Career {
         public Career(string id) {
             Id = id;
 
+            EntryPoint.Print(id);
+
             XDocument xDocument = XDocument.Load("plugins/San Andreas Patrol/careers/" + Id + ".xml");
 
             XElement xCareer = xDocument.Element("Career");
@@ -49,6 +53,7 @@ namespace SanAndreasPatrol.Career {
 
             Agency = AgencyManager.GetAgencyById(xCareer.Element("Agency").Value);
             Station = Agency.GetStationById(xCareer.Element("Station").Value);
+            Rank = Agency.Ranks.Find(x => x.Id == int.Parse(xCareer.Element("Rank").Value));
 
             Difficulty = (CareerDifficulty)int.Parse(xCareer.Element("Difficulty").Value);
 
@@ -78,6 +83,33 @@ namespace SanAndreasPatrol.Career {
 
             Character.Glasses = int.Parse(xGlasses.Attribute("drawable").Value);
             Character.GlassesTexture = int.Parse(xGlasses.Attribute("texture").Value);
+
+            XElement xVehicles = xCharacter.Element("Vehicles");
+
+            if (xVehicles != null && xVehicles.Value != null) {
+                foreach (XElement xVehicle in xVehicles.Elements("Vehicle")) {
+                    XElement xVehicleSpawn = xVehicle.Element("Spawn");
+
+                    XElement xPosition = xVehicleSpawn.Element("Position");
+                    XElement xRotation = xVehicleSpawn.Element("Rotation");
+
+                    CareerVehicle careerVehicle = new CareerVehicle() {
+                        Model = xVehicle.Element("Model").Value,
+
+                        Position = new Vector3(
+                            float.Parse(xPosition.Attribute("breadth").Value),
+                            float.Parse(xPosition.Attribute("height").Value),
+                            float.Parse(xPosition.Attribute("depth").Value)),
+
+                        Rotation = new Rotator(
+                            float.Parse(xRotation.Attribute("breadth").Value),
+                            float.Parse(xRotation.Attribute("height").Value),
+                            float.Parse(xRotation.Attribute("depth").Value))
+                    };
+
+                    Vehicles.Add(careerVehicle);
+                }
+            }
         }
 
         public void Save() {
@@ -94,6 +126,7 @@ namespace SanAndreasPatrol.Career {
 
                     new XElement("Agency", Agency.Id),
                     new XElement("Station", Station.Id),
+                    new XElement("Rank", Rank.Id),
 
                     new XElement("Difficulty", (int)Difficulty),
 
@@ -181,5 +214,12 @@ namespace SanAndreasPatrol.Career {
 
             NativeFunction.CallByName<int>("SET_PED_PROP_INDEX", Game.LocalPlayer.Character, 2, Ears, EarsTexture, true);
         }
+    }
+
+    class CareerVehicle {
+        public string Model;
+
+        public Vector3 Position;
+        public Rotator Rotation;
     }
 }

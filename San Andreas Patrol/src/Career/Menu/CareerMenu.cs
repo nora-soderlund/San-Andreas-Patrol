@@ -21,6 +21,7 @@ namespace SanAndreasPatrol.Career.Menu {
 
         private static TabSubmenuItem tabCareers;
         private static TabMissionSelectItem tabAgencies;
+        private static TabSubmenuItem tabSettings;
 
         public static void Fiber() {
             TabView = new TabView("San Andreas Patrol") {
@@ -30,11 +31,34 @@ namespace SanAndreasPatrol.Career.Menu {
                 MoneySubtitle = " "
             };
 
+            List<UIMenuItem> pluginSettings = new List<UIMenuItem>();
+            UIMenuCheckboxItem startOnLoad = new UIMenuCheckboxItem("Start career on plugin load", PluginSettings.StartOnLoad, "Whether to start your previous career when the plugin is loaded or not.");
+            startOnLoad.CheckboxEvent += (UIMenuCheckboxItem sender, bool Checked) => {
+                PluginSettings.StartOnLoad = Checked;
+                
+                PluginSettings.Save();
+            };
+            pluginSettings.Add(startOnLoad);
+
+            List<UIMenuItem> careerSettings = new List<UIMenuItem>();
+            UIMenuCheckboxItem progressiveWorldTime = new UIMenuCheckboxItem("Enabled progressive world time", PluginSettings.ProgressiveWorldTime, "Whether to progress the world time alongside with your career.");
+            startOnLoad.CheckboxEvent += (UIMenuCheckboxItem sender, bool Checked) => {
+                PluginSettings.ProgressiveWorldTime = Checked;
+
+                PluginSettings.Save();
+            };
+            careerSettings.Add(progressiveWorldTime);
+
             tabCareers = new TabSubmenuItem("Career", new List<TabItem>());
             tabAgencies = new TabMissionSelectItem("Agencies", new List<MissionInformation>());
+            tabSettings = new TabSubmenuItem("Settings", new List<TabItem>() {
+                (TabItem)new TabInteractiveListItem("Plugin Settings", pluginSettings),
+                (TabItem)new TabInteractiveListItem("Career Settings", careerSettings)
+            });
 
             TabView.AddTab(tabCareers);
             TabView.AddTab(tabAgencies);
+            TabView.AddTab(tabSettings);
 
             Game.RawFrameRender += (s, e) => TabView.DrawTextures(e.Graphics);
 
@@ -101,7 +125,7 @@ namespace SanAndreasPatrol.Career.Menu {
                 });
 
                 foreach (AgencyStation station in agency.Stations) {
-                    tabAgencies.Heists.Add(new MissionInformation(
+                    MissionInformation stationMission = new MissionInformation(
                         "\t" + station.Name,
                         station.Description,
 
@@ -110,11 +134,12 @@ namespace SanAndreasPatrol.Career.Menu {
                         }
                     ) {
                         Logo = new MissionLogo(Game.CreateTextureFromFile("plugins/San Andreas Patrol/" + station.Images["card"]))
-                    });
+                    };
+
+                    tabAgencies.Heists.Add(stationMission);
                 }
             }
 
-            tabCareers.Visible = true;
 
             TabView.Visible = true;
         }

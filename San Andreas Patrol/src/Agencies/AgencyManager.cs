@@ -43,12 +43,21 @@ namespace SanAndreasPatrol.Agencies {
 
                 if (!xAgency.Element("Ranks").IsEmpty) {
                     foreach (XElement rank in xAgency.Element("Ranks").Elements("Rank")) {
-                        agency.Ranks.Add(rank.Value);
+                        agency.Ranks.Add(new AgencyRank() {
+                            Id = int.Parse(rank.Attribute("id").Value),
+                            Type = Data.Ranks[rank.Attribute("type").Value],
+                            Step = int.Parse(rank.Attribute("step").Value),
+                            Default = (rank.Attribute("default") != null),
+
+                            Name = rank.Value
+                        });
                     }
                 }
 
                 if (!xAgency.Element("Outfits").IsEmpty) {
                     foreach (XElement outfit in xAgency.Element("Outfits").Elements("Outfit")) {
+                        EntryPoint.Print(outfit.Attribute("id").Value);
+
                         AgencyOutfit agencyOutfit = new AgencyOutfit() {
                             Id = outfit.Attribute("id").Value,
                             Type = AgencyOutfit.Types[outfit.Attribute("type").Value],

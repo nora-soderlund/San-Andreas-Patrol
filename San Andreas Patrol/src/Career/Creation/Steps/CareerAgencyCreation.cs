@@ -26,6 +26,7 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
         public static void Start() {
             CareerCreation.Career.Agency = AgencyManager.GetDefaultAgency();
             CareerCreation.Career.Station = CareerCreation.Career.Agency.GetDefaultStation();
+            CareerCreation.Career.Rank = CareerCreation.Career.Agency.Ranks.Find(x => x.Default);
 
             Agencies = new UIMenuListScrollerItem<string>("Agency", "", AgencyManager.GetAgencyAbbreviations());
             Stations = new UIMenuListScrollerItem<string>("Station", "", CareerCreation.Career.Agency.GetStationNames());
@@ -66,6 +67,7 @@ namespace SanAndreasPatrol.Career.Creation.Steps {
         public static void OnAgencyChanged(UIMenuScrollerItem sender, int oldIndex, int newIndex) {
             CareerCreation.Career.Agency = AgencyManager.GetAgencyByAbbreviation(Agencies.Items[newIndex]);
             CareerCreation.Career.Station = CareerCreation.Career.Agency.GetDefaultStation();
+            CareerCreation.Career.Rank = CareerCreation.Career.Agency.Ranks.Find(x => x.Default);
 
             Stations.Items.Clear();
 

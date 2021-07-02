@@ -26,7 +26,7 @@ namespace SanAndreasPatrol.Agencies {
         public int SwornEmployees;
         public int UnswornEmployees;
 
-        public List<string> Ranks = new List<string>();
+        public List<AgencyRank> Ranks = new List<AgencyRank>();
 
         public List<AgencyOutfit> Outfits = new List<AgencyOutfit>();
 
@@ -54,5 +54,23 @@ namespace SanAndreasPatrol.Agencies {
 
             return names;
         }
+    }
+
+    class AgencyRank {
+        public int Id;
+        public string Name;
+        public AgencyRankType Type;
+        public int Step;
+        public bool Default;
+    }
+
+    enum AgencyRankType {
+        Officer = 0,
+        Detective,
+        Sergeant,
+        Lieutenant,
+        Captain,
+        Commander,
+        Chief
     }
 }

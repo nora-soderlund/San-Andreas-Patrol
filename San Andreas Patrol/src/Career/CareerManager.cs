@@ -28,6 +28,9 @@ namespace SanAndreasPatrol.Career {
 
         public static Dictionary<string, List<string>> Names = new Dictionary<string, List<string>>();
 
+        public static Vehicle Vehicle;
+        public static List<Blip> Blips = new List<Blip>();
+
         public static void Fiber() {
             Directory.CreateDirectory("plugins/San Andreas Patrol/careers/backup/");
 
@@ -56,52 +59,117 @@ namespace SanAndreasPatrol.Career {
 
             GameFiber.StartNew(CareerCreation.Fiber);
             GameFiber.StartNew(CareerMenu.Fiber);
-        
-            Game.DisplayHelp($"Press ~{Key.GetInstructionalId()}~ to start San Andreas Patrol.");
 
             KeyboardData.Register(Key, OnKeyDown);
             KeyboardData.Register(Keys.T, OnKeyDownReset);
+
+            if(PluginSettings.StartOnLoad) {
+                Career career = Careers.Find(x => x.Id == PluginSettings.PreviousCareer);
+
+                if (career != null)
+                    Start(career);
+            }
+            else
+                Game.DisplayHelp($"Press ~{Key.GetInstructionalId()}~ to start San Andreas Patrol.");
         }
 
         public static void Start(Career career) {
-            if(Career != null) {
-                Career.Save();
-
-                Career = null;
-
-                Game.LocalPlayer.IsIgnoredByPolice = false;
-            }
+            if(Career != null)
+                Stop();
 
             Career = career;
 
             Game.FadeScreenOut(1000, true);
 
-            Game.LocalPlayer.IsIgnoredByPolice = true;
+            Career.Character.Apply();
 
-            AgencyStationSpawn agencyStationSpawn = Career.Station.Spawns.Where(x => x.Type == "parking").FirstOrDefault(x => x.Step == "start");
-            AgencyStationSpawn agencyStationSpawnFinish = Career.Station.Spawns.Where(x => x.Type == "parking").FirstOrDefault(x => x.Step == "finish");
+            AgencyOutfit agencyOutfit = Career.Agency.Outfits.Find(x => x.Type == AgencyOutfitType.Patrol && x.Gender == Career.Character.Gender);
+            agencyOutfit.Apply(Game.LocalPlayer.Character);
 
-            foreach (Vehicle tempVehicle in World.GetAllVehicles().Where(x => x.Exists() && x.DistanceTo(agencyStationSpawn.Position) < 5.0f)) {
-                tempVehicle.Delete();
-            }
 
-            Vehicle vehicle = new Vehicle(new Model("POLICE"), agencyStationSpawn.Position);
-            vehicle.Rotation = agencyStationSpawn.Rotation;
+            List<AgencyStationSpawn> agencyStationSpawns = Career.Station.Spawns.Where(x => x.Type == "parking").ToList();
+            AgencyStationSpawn agencyStationParkingSpawn = agencyStationSpawns[new Random().Next(agencyStationSpawns.Count)];
+
+            foreach (Vehicle blockingVehicle in World.GetAllVehicles().Where(x => x.Exists() && x.DistanceTo(agencyStationParkingSpawn.Position) < 4.0f))
+                blockingVehicle.Delete();
+
+            Vehicle vehicle = new Vehicle(new Model("SHERIFF"), agencyStationParkingSpawn.Position);
+            vehicle.Rotation = agencyStationParkingSpawn.Rotation;
             EntryPoint.Vehicles.Add(vehicle);
 
-            Game.LocalPlayer.Character.Position = agencyStationSpawn.Position;
+            Game.LocalPlayer.Character.Position = agencyStationParkingSpawn.Position;
 
             Game.LocalPlayer.Character.WarpIntoVehicle(vehicle, -1);
 
-            AgencyStationCamera agencyStationCamera = Career.Station.Cameras.FirstOrDefault(x => x.Type == "parking");
+            foreach (Agency agency in AgencyManager.Agencies) {
+                int number = 0;
 
-            Task driveToPosition = Game.LocalPlayer.Character.Tasks.DriveToPosition(agencyStationSpawnFinish.Position, 6.0f, VehicleDrivingFlags.StopAtDestination);
+                foreach (AgencyStation agencyStation in agency.Stations) {
+                    AgencyStationSpawn agencyStationSpawn = agencyStation.Spawns.FirstOrDefault(x => x.Type == "entrance");
+
+                    if (agencyStationSpawn == null)
+                        continue;
+
+                    number++;
+
+                    Blip blip = new Blip(agencyStationSpawn.Position, 100.0f) {
+                        NumberLabel = number,
+                        Sprite = BlipSprite.PoliceStation2,
+                        Color = (agency.Id == Career.Agency.Id)?(HudColor.White.GetColor()):(HudColor.Grey.GetColor())
+                    };
+
+                    blip.Name = agency.Name;
+
+                    Blips.Add(blip);
+                }
+            }
 
             Game.FadeScreenIn(1000);
+        }
 
-            driveToPosition.WaitForCompletion(8000);
+        public static void Stop() {
+            if (Career == null)
+                return;
 
-            Game.LocalPlayer.Character.Tasks.Clear();
+            Career.Save();
+
+            Career = null;
+
+            Game.LocalPlayer.IsIgnoredByPolice = false;
+            Game.LocalPlayer.Character.RelationshipGroup = RelationshipGroup.Player;
+
+            foreach (Blip blip in Blips.Where(x => x.Exists()))
+                blip.Delete();
+
+            Blips.Clear();
+
+            if (Vehicle != null && Vehicle.Exists())
+                Vehicle.Delete();
+
+            Vehicle = null;
+        }
+
+        public static Vehicle SpawnVehicle(CareerVehicle vehicle) {
+            if (Vehicle != null)
+                DestroyVehicle();
+
+            foreach (Vehicle blockingVehicle in World.GetAllVehicles().Where(x => x.Exists() && x.DistanceTo(vehicle.Position) < 4.0f))
+                blockingVehicle.Delete();
+
+            Vehicle = new Vehicle(new Model(vehicle.Model), vehicle.Position);
+            Vehicle.Rotation = vehicle.Rotation;
+
+            return Vehicle;
+        }
+
+        public static void DestroyVehicle() {
+            if (Vehicle == null)
+                return;
+
+            if (Vehicle.Exists())
+                Vehicle.Delete();
+
+            Vehicle = null;
         }
 
         private static void OnKeyDown() {

@@ -10,6 +10,7 @@ using Rage.Native;
 using Rage.Attributes;
 
 using SanAndreasPatrol.Career;
+using SanAndreasPatrol.Agencies;
 
 namespace SanAndreasPatrol {
     enum Gender {
@@ -17,6 +18,16 @@ namespace SanAndreasPatrol {
     }
 
     class Data {
+        public static Dictionary<string, AgencyRankType> Ranks = new Dictionary<string, AgencyRankType>() {
+            { "officer", AgencyRankType.Officer },
+            { "sergeant", AgencyRankType.Sergeant },
+            { "lieutenant", AgencyRankType.Lieutenant },
+            { "detective", AgencyRankType.Detective },
+            { "captain", AgencyRankType.Captain },
+            { "commander", AgencyRankType.Commander },
+            { "chief", AgencyRankType.Chief }
+        };
+
         public static Dictionary<string, Gender> Genders = new Dictionary<string, Gender>() {
             { "unisex", Gender.Unisex },
             { "male", Gender.Male },

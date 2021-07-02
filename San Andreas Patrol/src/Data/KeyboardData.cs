@@ -19,7 +19,7 @@ namespace SanAndreasPatrol {
 
                 foreach(KeyValuePair<Keys, List<Action>> pair in Keys) {
                     if(KeysDown.Contains(pair.Key)) {
-                        if(!Game.IsKeyDown(pair.Key))
+                        if(!Game.IsKeyDownRightNow(pair.Key))
                             KeysDown.Remove(pair.Key);
 
                         continue;
@@ -27,7 +27,7 @@ namespace SanAndreasPatrol {
 
                     KeysDown.Add(pair.Key);
 
-                    if (Game.IsKeyDown(pair.Key)) {
+                    if (Game.IsKeyDownRightNow(pair.Key)) {
                         foreach(Delegate method in pair.Value) {
                             method.DynamicInvoke();
                         }

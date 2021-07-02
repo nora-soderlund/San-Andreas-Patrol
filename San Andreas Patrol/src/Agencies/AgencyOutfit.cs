@@ -10,7 +10,8 @@ using Rage.Attributes;
 
 namespace SanAndreasPatrol.Agencies {
     enum AgencyOutfitType {
-        Formal = 0
+        Formal = 0,
+        Patrol
     }
 
     class AgencyOutfit {
@@ -21,7 +22,8 @@ namespace SanAndreasPatrol.Agencies {
         public List<AgencyOutfitPart> Parts = new List<AgencyOutfitPart>();
 
         public static Dictionary<string, AgencyOutfitType> Types = new Dictionary<string, AgencyOutfitType>() {
-            { "formal", AgencyOutfitType.Formal }
+            { "formal", AgencyOutfitType.Formal },
+            { "patrol", AgencyOutfitType.Patrol }
         };
 
         public void Apply(Ped ped) {
