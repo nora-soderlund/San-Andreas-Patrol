@@ -13,10 +13,27 @@ using Rage.Attributes;
 
 using SanAndreasPatrol.Agencies;
 using SanAndreasPatrol.Career;
+
 using SanAndreasPatrol.Radio.Menu;
+using SanAndreasPatrol.Radio.Tasks;
 
 namespace SanAndreasPatrol.Radio {
     class RadioManager {
+        public static IRadioTask Task;
+
+        public static void StartTask(IRadioTask task) {
+            StopTask();
+
+            Task = task;
+        }
+
+        public static void StopTask() {
+            if (Task == null)
+                return;
+
+            Task = null;
+        }
+
         public static List<RadioMessage> Messages = new List<RadioMessage>();
 
         public static void Fiber() {

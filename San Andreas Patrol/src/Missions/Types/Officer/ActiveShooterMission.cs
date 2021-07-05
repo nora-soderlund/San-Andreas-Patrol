@@ -19,6 +19,7 @@ using SanAndreasPatrol.Agencies;
 using SanAndreasPatrol.Career;
 using SanAndreasPatrol.Extras;
 using SanAndreasPatrol.Radio;
+using SanAndreasPatrol.Radio.Tasks.Missions;
 
 namespace SanAndreasPatrol.Missions {
     class ActiveShooterMission : IMission {
@@ -30,62 +31,30 @@ namespace SanAndreasPatrol.Missions {
 
         public List<uint> Notifications = new List<uint>();
 
-        public bool Responding = false;
-
         public Ped Suspect;
-
-        public Blip Blip;
 
         public void OnMissionStart() {
             Active = true;
 
-            List<Ped> peds = World.GetAllPeds().Where(x => x.Exists() && !x.IsPlayer && x.IsHuman && x.RelationshipGroup != RelationshipGroup.Cop).ToList();
-
-            Suspect = peds[new Random().Next(peds.Count)];
-
-            Suspect.IsPersistent = true;
+            Suspect = MissionManager.GetRandomSuspect();
 
             Suspect.Inventory.GiveNewWeapon(WeaponHash.Pistol50, 100, true);
-            
-            Suspect.Tasks.Clear();
 
-            Notifications.Add(RadioManager.Dispatch("ACTIVE_SHOOTER_START", new Dictionary<string, string>() {
-                { "street", World.GetStreetName(Suspect.Position) },
-                { "incident", "000000" }
+            MissionManager.BlipPool.Add(new Blip(World.GetNextPositionOnStreet(Suspect.Position)) {
+                Sprite = BlipSprite.Unknown9,
+
+                Color = System.Drawing.Color.FromArgb(128, 255, 0, 0),
+
+                IsRouteEnabled = true
+            });
+
+            RadioManager.StartTask(new RadioDispatchTask("ACTIVE_SHOOTER", true, true, new Dictionary<string, string>() {
+                { "unit", "6A12" },
+                { "street", World.GetStreetName(Game.LocalPlayer.Character.Position) },
+                { "incident", "000000" },
+
+                { "suspect.street", World.GetStreetName(Suspect.Position) }
             }));
-
-            Blip = new Blip(Suspect) {
-                Sprite = BlipSprite.Destination2,
-                
-                IsRouteEnabled = true,
-
-                RouteColor = HudColor.Red.GetColor(),
-                Color = HudColor.Red.GetColor()
-            };
-
-            Dictionary<string, string> requestReplacements = new Dictionary<string, string>() { { "unit", "6A12" }, { "street", World.GetStreetName(Game.LocalPlayer.Character.Position) } };
-
-            RadioManager.Request("MISSION_RESPOND_CODE_3", requestReplacements, () => {
-                Responding = true;
-
-                Notifications.Add(RadioManager.Dispatch("MISSION_RESPOND_CODE_3", requestReplacements));
-
-                Game.DisplaySubtitle("Respond to the ~r~area~w~ with lights and sirens.");
-            });
-
-            RadioManager.Request("MISSION_RESPOND_CODE_2", requestReplacements, () => {
-                Responding = true;
-
-                Notifications.Add(RadioManager.Dispatch("MISSION_RESPOND_CODE_2", requestReplacements));
-
-                Game.DisplaySubtitle("Respond to the ~r~area~w~ without lights and sirens.~n~Upgrade to lights and sirens in the radio menu.");
-
-                RadioManager.Request("MISSION_RESPOND_CODE_3_UPGRADE", requestReplacements, () => {
-                    Notifications.Add(RadioManager.Dispatch("MISSION_RESPOND_CODE_3_UPGRADE", requestReplacements));
-
-                    Game.DisplaySubtitle("Respond to the ~r~area~w~ with lights and sirens.");
-                });
-            });
 
             Ped targetPed = null;
 
@@ -110,12 +79,6 @@ namespace SanAndreasPatrol.Missions {
 
             Active = false;
 
-            if (Blip != null && Blip.Exists())
-                Blip.Delete();
-
-            Blip = null;
-
-            Responding = false;
             Suspect = null;
 
             RadioManager.ClearRequests();

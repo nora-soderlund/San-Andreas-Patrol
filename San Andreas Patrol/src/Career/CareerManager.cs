@@ -97,6 +97,10 @@ namespace SanAndreasPatrol.Career {
             vehicle.Rotation = agencyStationParkingSpawn.Rotation;
             EntryPoint.Vehicles.Add(vehicle);
 
+            new Blip(vehicle) {
+                Sprite = BlipSprite.GangVehiclePolice
+            };
+
             Game.LocalPlayer.Character.Position = agencyStationParkingSpawn.Position;
 
             Game.LocalPlayer.Character.WarpIntoVehicle(vehicle, -1);
